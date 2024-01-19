@@ -8,6 +8,8 @@ using OmniePDV.ReceiptSender.Worker;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services
+    .Configure<ApiOptions>(
+        builder.Configuration.GetSection(ApiOptions.Position))
     .Configure<RabbitMQOptions>(
         builder.Configuration.GetSection(RabbitMQOptions.Position))
     .Configure<MailSettingsOptions>(

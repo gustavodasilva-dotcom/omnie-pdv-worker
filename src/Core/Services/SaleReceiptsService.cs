@@ -33,12 +33,20 @@ public sealed class SaleReceiptsService(
 
         foreach (var product in payload.Sale.Products)
         {
-            string template = ReceiptEmailTemplate.ItemTemplate;
-            template = template.Replace("[item-description]", product.Product.Name);
+            string template = ReceiptEmailTemplate.TableRowTemplate;
+
+            template = template
+                .Replace("[item-description]", product.Product.Name)
+                .Replace("[item-unitary-price]", string.Format("{0:C}",
+                    product.Product.RetailPrice))
+                .Replace("[item-quantity]", product.Quantity.ToString())
+                .Replace("[item-total-price]", string.Format("{0:C}",
+                    product.Product.RetailPrice * product.Quantity));
+            
             itemsTemplate += template;
         }
 
-        receiptTemplate = receiptTemplate.Replace("[[custom-content]]", itemsTemplate);
+        receiptTemplate = receiptTemplate.Replace("[[table-rows-content]]", itemsTemplate);
         
         string bodyTemplate = DefaultEmailTemplate.HtmlText;
         bodyTemplate = bodyTemplate.Replace("[[custom-content]]", receiptTemplate);
@@ -58,9 +66,9 @@ public sealed class SaleReceiptsService(
             {
                 Parameters =
                 {
-                    { "[order-number]", payload.Sale.Number.ToString() },
+                    { "[order-number]", payload.Sale.Number.ToString().PadLeft(4, '0') },
                     { "[order-client]", payload.Sale.Client.Name },
-                    { "[total-amount]", payload.Sale.Total.ToString() }
+                    { "[total-amount]", string.Format("{0:C}", payload.Sale.Total) }
                 },
                 HtmlBody = bodyTemplate
             }
