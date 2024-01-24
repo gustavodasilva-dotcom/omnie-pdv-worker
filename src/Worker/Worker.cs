@@ -1,5 +1,4 @@
 using OmniePDV.ReceiptSender.Core.Contracts.Services;
-using System.Threading;
 
 namespace OmniePDV.ReceiptSender.Worker;
 

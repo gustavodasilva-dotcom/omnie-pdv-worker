@@ -9,7 +9,6 @@ public sealed class MessageConsumer(IOptions<RabbitMQOptions> options)
     : IMessageConsumer
 {
     private readonly RabbitMQOptions _options = options.Value;
-    private readonly IModel? _channel;
 
     private IConnection CreateConnection()
     {
